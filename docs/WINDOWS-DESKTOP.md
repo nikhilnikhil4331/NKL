@@ -1,6 +1,13 @@
 # Wattwise for Windows 11
 
-## Run the source package (available now)
+## Download the installer
+
+Open [Wattwise releases](https://github.com/nikhilnikhil4331/Wattwise/releases) and
+download the Windows x64 `.exe` from a successful preview release. The installed
+application does not need Node.js or Python. Check the release notes for accuracy
+limits and the unsigned-installer warning.
+
+## Run from source instead
 
 See [`WINDOWS-START-HERE.txt`](../WINDOWS-START-HERE.txt) for non-technical steps.
 Install **Node.js LTS 22.12+**, extract the run-package ZIP, then double-click
@@ -105,8 +112,9 @@ atomic store/backups, Windows battery parsing, and the persistent PowerShell str
 fixtures. Browser tests cover the native bridge, settings/autostart commands, CSV delegation
 and bootstrap failure, as well as the existing browser flows.
 
-**No physical Windows laptop or Windows runtime was available in the sandbox.** The real
-WMI sensor, native tray behavior, installer, login startup and Windows security prompts
-still require Windows smoke testing. Test on battery, then plug in, pause/resume, hide the
+**The packaged Windows executable has passed the automated GitHub Windows runner
+smoke test** for startup, IPC, background tracking while tray-hidden, pause and disk
+persistence. No physical laptop battery was available: real WMI accuracy, the installer
+wizard, login startup and Windows security prompts still need device testing. Test on battery, then plug in, pause/resume, hide the
 window, reopen it, sleep/wake, and relaunch. Never validate energy by expecting a charger’s
 rated maximum to equal its actual draw.

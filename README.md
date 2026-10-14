@@ -24,4 +24,4 @@ the app open; exact whole-device wall power needs an external meter.
 
 ## Project publishing
 
-The intended standalone repository is `nikhilnikhil4331/Wattwise`. Repository creation and publication are pending GitHub access. The Windows workflow publishes preview installers only after the build and packaged-app smoke test pass.
+The standalone project repository is [nikhilnikhil4331/Wattwise](https://github.com/nikhilnikhil4331/Wattwise). The Windows workflow publishes preview installers only after the build and packaged-app smoke test pass. Development is on `arena/07405809-nkl`.
