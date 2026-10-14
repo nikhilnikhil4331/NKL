@@ -1,0 +1,71 @@
+WATTWISE - WINDOWS 11 RUN PACKAGE
+================================
+This ZIP is a source run package, NOT a prebuilt .exe installer.
+Python and a browser are NOT required for desktop tracking.
+Node.js is required for this package; first-time setup needs internet.
+
+SIMPLE STEPS
+1. Install Node.js LTS (version 22.12 or newer) from:
+   https://nodejs.org/en/download
+   The official installer includes npm. Keep its default options.
+
+2. Right-click the downloaded Wattwise ZIP and select "Extract All".
+   Put the extracted folder somewhere permanent, for example:
+   C:\Users\YOUR-NAME\Documents\Wattwise
+   Do NOT run the launcher from inside the ZIP viewer.
+
+3. Open the extracted folder. Double-click Run-Wattwise.cmd.
+   First launch downloads the dependencies and the desktop runtime.
+   Wait for setup to finish; do not close its console while it is working.
+   On success, the console exits and the Wattwise desktop window opens.
+   Later launches reuse the downloaded dependencies.
+
+4. In Wattwise, open Settings:
+   - Set currency to INR (or your preferred currency).
+   - Enter YOUR bill's cost per unit (kWh); 8 is an example, not your tariff.
+   - Keep "Battery sensor" selected for supported battery readings.
+   - Save preferences.
+
+5. Use the laptop on battery for a moment to check sensor support.
+   Supported Windows battery drivers report approximately once per second.
+   If "No signal" appears, read the message. Not every laptop reports watts.
+
+BACKGROUND TRACKING
+- The window's X button HIDES Wattwise to the tray near the Windows clock.
+- Click the purple lightning tray icon to reopen it.
+- Right-click that icon to Pause, Resume, or Quit Wattwise.
+- Settings -> Start with Windows is optional and OFF by default.
+- It starts in the tray at sign-in. Keep this folder in the same location.
+- Sleep, hibernate, shutdown, and quit time are NOT measured or backfilled.
+
+IMPORTANT: WHAT IT CAN AND CANNOT MEASURE
+- Battery sensor = battery DISCHARGE power. It is NOT socket electricity.
+- While charging/plugged in, no supported discharge reading means no energy
+  is added. The app never silently switches to guessed measurements.
+- To estimate while plugged in, select "Wattage estimate" and enter your
+  average watts. Charger rating (e.g. 65 W) is NOT actual usage.
+- Exact wall electricity needs an external wattmeter/energy-monitoring plug.
+  Direct smart-plug integration is NOT included in this version.
+- Battery energy cost is an equivalent at your tariff, not a charging bill.
+  Charger losses, fixed charges, taxes and tiered tariffs are excluded.
+
+YOUR RECORDS
+- Saved every 5 seconds, and on pause/hide/normal quit:
+  %APPDATA%\Wattwise\state.json
+- Use Export report for a CSV backup. Up to 50 sessions are retained.
+- Browser-preview history is separate and is not imported automatically.
+- Start with Windows uses only your current Windows user; no admin needed.
+- To stop using it: disable Start with Windows, then Quit from the tray.
+  Deleting this extracted folder does not delete the saved data folder.
+
+IF SOMETHING GOES WRONG
+- If Node.js was just installed, close and reopen the launcher.
+- If setup fails, its console stays open. Share the actual error/screenshot.
+- If Windows security or your organization blocks it, do not disable
+  Defender/SmartScreen/firewall or bypass organization restrictions.
+- This build's logic and UI are tested using fixtures, but the native app
+  has not been run on a physical Windows laptop in this development sandbox.
+
+HOW ENERGY IS CALCULATED
+100 watts x 10 hours / 1,000 = 1 kWh = 1 unit.
+At Rs 8 per unit, this energy costs Rs 8.

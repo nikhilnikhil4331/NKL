@@ -1,0 +1,73 @@
+{
+  "name": "wattwise",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "playwright test",
+    "desktop": "npm run build && electron .",
+    "package:win": "npm run build && electron-builder --win nsis --x64 --publish never"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^2.15.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3",
+    "vite": "^6.3.5"
+  },
+  "main": "desktop/main.js",
+  "description": "Windows laptop battery energy and electricity cost tracker",
+  "author": "Wattwise",
+  "build": {
+    "appId": "com.wattwise.desktop",
+    "productName": "Wattwise",
+    "directories": {
+      "output": "build/windows"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "src/energy.js",
+      "src/persistence.js",
+      "package.json",
+      "!node_modules/**/*"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "desktop/assets/icon.ico",
+      "signAndEditExecutable": false,
+      "artifactName": "Wattwise-Setup-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "allowElevation": false
+    }
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+playwright-report/
+test-results/
+release/
+deliverables/
+*.log
+build/

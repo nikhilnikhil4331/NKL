@@ -1,0 +1,94 @@
+name: Build Windows desktop installer
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - arena/07405809-nkl
+    paths:
+      - 'desktop/**'
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'index.html'
+      - 'vite.config.js'
+      - '.github/workflows/windows-desktop.yml'
+permissions:
+  contents: read
+concurrency:
+  group: windows-desktop-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Test calculations, persistence, and background tracker
+        run: npm test
+      - name: Build Windows x64 installer
+        run: npm run package:win
+      - name: Smoke-test packaged Windows app
+        run: node scripts/smoke-windows.cjs
+        timeout-minutes: 4
+      - name: Record installer checksum
+        shell: pwsh
+        run: |
+          Get-ChildItem build/windows/*Setup*.exe | ForEach-Object {
+            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
+            "$hash  $($_.Name)" | Out-File -Encoding ascii "$($_.FullName).sha256"
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Wattwise-Windows-11-x64
+          path: |
+            build/windows/*Setup*.exe
+            build/windows/*.sha256
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-smoke-diagnostics
+          path: test-results/
+          if-no-files-found: ignore
+  release:
+    needs: windows
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.repository == 'nikhilnikhil4331/Wattwise' && github.ref == 'refs/heads/arena/07405809-nkl'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: Wattwise-Windows-11-x64
+          path: installer
+      - name: Publish installer as a preview release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="wattwise-v${VERSION}-build.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+          gh release create "$TAG" installer/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Wattwise ${VERSION} — Windows 11 preview" \
+            --prerelease \
+            --notes-file docs/RELEASE-NOTES.md
+          echo "## Windows download" >> "$GITHUB_STEP_SUMMARY"
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url --jq .url >> "$GITHUB_STEP_SUMMARY"
